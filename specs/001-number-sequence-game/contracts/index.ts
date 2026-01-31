@@ -1,9 +1,9 @@
 /**
  * Number Sequence Game - Contract Definitions
- * 
+ *
  * This module re-exports all TypeScript interfaces and types
  * used by the Number Sequence Game.
- * 
+ *
  * @module contracts
  */
 

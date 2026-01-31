@@ -21,17 +21,17 @@ Build a web-based number sequence game with a 10x10 board displaying numbers 0-9
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
-| Principle | Status | Evidence |
-|-----------|--------|----------|
-| I. Focus-Driven Development | ✅ PASS | All features serve core mission: finding numbers efficiently. Single game with two modes, no feature bloat. |
-| II. Test-First Development (NON-NEGOTIABLE) | ✅ PLANNED | Vitest + React Testing Library will be used. Tests must be written BEFORE implementation per TDD workflow. |
-| III. Quality Gates | ✅ PLANNED | ESLint, Prettier, TypeScript strict mode, Vitest tests in CI/CD pipeline. |
-| IV. Simplicity and YAGNI | ✅ PASS | No backend, no database, no auth, no persistence. Minimal dependencies. Client-side only. |
-| V. Documentation and Transparency | ✅ PASS | spec.md exists, plan.md in progress, data-model.md and contracts planned. |
-| VI. UI Development Standards | ✅ PLANNED | Material-UI (MUI) for Material Design compliance. Responsive design for ≥320px. WCAG 2.1 AA target. |
-| VII. TypeScript Standards (NON-NEGOTIABLE) | ✅ PLANNED | TypeScript strict mode, explicit types, ESLint with TS rules, no `any` without justification. |
+| Principle                                   | Status     | Evidence                                                                                                    |
+| ------------------------------------------- | ---------- | ----------------------------------------------------------------------------------------------------------- |
+| I. Focus-Driven Development                 | ✅ PASS    | All features serve core mission: finding numbers efficiently. Single game with two modes, no feature bloat. |
+| II. Test-First Development (NON-NEGOTIABLE) | ✅ PLANNED | Vitest + React Testing Library will be used. Tests must be written BEFORE implementation per TDD workflow.  |
+| III. Quality Gates                          | ✅ PLANNED | ESLint, Prettier, TypeScript strict mode, Vitest tests in CI/CD pipeline.                                   |
+| IV. Simplicity and YAGNI                    | ✅ PASS    | No backend, no database, no auth, no persistence. Minimal dependencies. Client-side only.                   |
+| V. Documentation and Transparency           | ✅ PASS    | spec.md exists, plan.md in progress, data-model.md and contracts planned.                                   |
+| VI. UI Development Standards                | ✅ PLANNED | Material-UI (MUI) for Material Design compliance. Responsive design for ≥320px. WCAG 2.1 AA target.         |
+| VII. TypeScript Standards (NON-NEGOTIABLE)  | ✅ PLANNED | TypeScript strict mode, explicit types, ESLint with TS rules, no `any` without justification.               |
 
 **Gate Status**: ✅ ALL GATES PASS - Proceed to Phase 0
 
@@ -103,5 +103,5 @@ public/                  # Static assets
 > No constitution violations. All principles satisfied with the proposed design.
 
 | Violation | Why Needed | Simpler Alternative Rejected Because |
-|-----------|------------|-------------------------------------|
-| (none) | - | - |
+| --------- | ---------- | ------------------------------------ |
+| (none)    | -          | -                                    |

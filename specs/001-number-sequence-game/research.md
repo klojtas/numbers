@@ -10,12 +10,14 @@
 **Decision**: Use React 18 with functional components and hooks
 
 **Rationale**:
+
 - Constitution requires Material Design UI → MUI (Material-UI) is the leading React implementation
 - React's component model aligns with game architecture (board, cells, controls, status)
 - Hooks enable clean state management without Redux complexity
 - Large ecosystem and community support
 
 **Alternatives Considered**:
+
 - Vue 3 + Vuetify - Rejected: MUI has better TypeScript support and larger community
 - Svelte - Rejected: Smaller ecosystem, fewer Material Design options
 - Vanilla JS - Rejected: Would require building component system, violates simplicity principle
@@ -25,6 +27,7 @@
 **Decision**: Use Vite for development and production builds
 
 **Rationale**:
+
 - Fast development server with HMR (Hot Module Replacement)
 - Native TypeScript support without additional configuration
 - Optimized production builds for static hosting
@@ -32,6 +35,7 @@
 - Built-in support for React
 
 **Alternatives Considered**:
+
 - Create React App - Rejected: Slower, larger bundle, less configurable
 - Webpack (manual) - Rejected: Complex configuration, violates simplicity principle
 - Parcel - Rejected: Less ecosystem support, fewer plugins
@@ -41,6 +45,7 @@
 **Decision**: Use MUI for Material Design components
 
 **Rationale**:
+
 - Constitution requirement: "UI components MUST follow Material Design principles"
 - Comprehensive component library (Grid, Button, Typography, Modal)
 - Built-in theming system for customization
@@ -48,6 +53,7 @@
 - Accessibility built-in (WCAG compliance)
 
 **Key Components to Use**:
+
 - `Grid2` - For 10x10 game board layout
 - `Button` - Start/Reset buttons
 - `Paper` - Cell containers
@@ -61,12 +67,14 @@
 **Decision**: Use built-in React hooks without external state library
 
 **Rationale**:
+
 - Game state is simple and localized (not shared across unrelated components)
 - `useReducer` provides predictable state transitions for game logic
 - No server sync needed → no need for TanStack Query or similar
 - Constitution principle IV (Simplicity): "Dependencies MUST be minimized"
 
 **State Structure**:
+
 ```typescript
 interface GameState {
   phase: 'idle' | 'playing' | 'ended';
@@ -84,12 +92,14 @@ interface GameState {
 **Decision**: Use Vitest for unit/integration tests, React Testing Library for component tests
 
 **Rationale**:
+
 - Constitution requirement: TDD is mandatory (Principle II)
 - Vitest is Vite-native → faster test execution, shared config
 - React Testing Library tests user behavior, not implementation
 - jsdom environment for DOM testing without browser
 
 **Testing Strategy**:
+
 - Unit tests for utility functions (shuffle, validation)
 - Hook tests for game logic (useGame, useTimer)
 - Component tests for UI behavior
@@ -100,11 +110,13 @@ interface GameState {
 **Decision**: Build as static files deployable to any static host
 
 **Rationale**:
+
 - FR-026: "Application MUST be hostable as static files"
 - FR-028: "Application MUST work without server-side processing"
 - GitHub Pages is free and integrates with GitHub workflow
 
 **Deployment Targets**:
+
 1. **Local**: `npm run dev` or `npm run preview`
 2. **Docker**: Nginx serving built static files
 3. **GitHub Pages**: Automated via GitHub Actions
@@ -114,6 +126,7 @@ interface GameState {
 ### React + TypeScript Best Practices
 
 1. **Component Typing**:
+
    ```typescript
    interface GameCellProps {
      number: number;
@@ -121,18 +134,19 @@ interface GameState {
      isNext: boolean;
      onSelect: (num: number) => void;
    }
-   
+
    export const GameCell: React.FC<GameCellProps> = ({ ... }) => { ... }
    ```
 
 2. **Event Handlers**: Use proper event types
+
    ```typescript
    const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => { ... }
    ```
 
 3. **State Updates**: Use functional updates for state that depends on previous state
    ```typescript
-   setSelectedNumbers(prev => new Set([...prev, number]));
+   setSelectedNumbers((prev) => new Set([...prev, number]));
    ```
 
 ### MUI Theming Best Practices
@@ -148,11 +162,11 @@ interface GameState {
 ```typescript
 useEffect(() => {
   if (phase !== 'playing') return;
-  
+
   const interval = setInterval(() => {
-    setElapsedSeconds(prev => prev + 1);
+    setElapsedSeconds((prev) => prev + 1);
   }, 1000);
-  
+
   return () => clearInterval(interval);
 }, [phase]);
 ```
@@ -187,6 +201,7 @@ Per constitution VI and SC-003 (intuitive UI):
 ### Docker Configuration
 
 **Multi-stage build for minimal image**:
+
 ```dockerfile
 # Build stage
 FROM node:20-alpine AS build
@@ -206,13 +221,14 @@ EXPOSE 80
 
 All technical context was resolved without external clarification:
 
-| Original Unknown | Resolution |
-|-----------------|------------|
-| (none) | All technologies defined by constitution and spec requirements |
+| Original Unknown | Resolution                                                     |
+| ---------------- | -------------------------------------------------------------- |
+| (none)           | All technologies defined by constitution and spec requirements |
 
 ## Summary
 
 The technical stack is fully defined:
+
 - **React 18 + TypeScript** for the application
 - **MUI 5** for Material Design components
 - **Vite** for fast builds and development

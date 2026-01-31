@@ -1,15 +1,15 @@
 /**
  * Cell State Contract
- * 
+ *
  * Defines the derived state for individual board cells.
- * 
+ *
  * @module contracts/cell-state
  */
 
 /**
  * State for an individual cell on the game board.
  * This is derived/computed state, not stored directly.
- * 
+ *
  * @example
  * ```typescript
  * const cell: CellState = {
@@ -68,10 +68,10 @@ export interface ComputeCellStateParams {
  */
 export function computeCellState(params: ComputeCellStateParams): CellState {
   const { number, position, selectedNumbers, nextExpectedNumber, isPlaying } = params;
-  
+
   const isSelected = selectedNumbers.has(number);
   const isNext = number === nextExpectedNumber;
-  
+
   return {
     number,
     position,

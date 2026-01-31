@@ -344,7 +344,7 @@ Select-String -Path ".specify/memory/constitution.md" -Pattern "^### [IVX]+\."
 grep -E '\[.*\]' .specify/memory/constitution.md | grep -v "^\#" | grep -v "^\<"
 
 # PowerShell
-Select-String -Path ".specify/memory/constitution.md" -Pattern '\[.*\]' | 
+Select-String -Path ".specify/memory/constitution.md" -Pattern '\[.*\]' |
     Where-Object { $_.Line -notmatch "^#" -and $_.Line -notmatch "^<" }
 ```
 
@@ -546,6 +546,7 @@ Use this checklist before committing changes:
 **Problem**: The constitution file doesn't exist at the expected path.
 
 **Solution**:
+
 ```bash
 # Check if file exists
 ls -la .specify/memory/constitution.md
@@ -562,6 +563,7 @@ pwd
 **Problem**: The version doesn't follow semantic versioning (MAJOR.MINOR.PATCH).
 
 **Solution**:
+
 - Update the version line in constitution.md
 - Format: `**Version**: X.Y.Z` (e.g., `1.0.0`)
 - See [Semantic Versioning](https://semver.org/)
@@ -571,6 +573,7 @@ pwd
 **Problem**: Template placeholders like `[PROJECT_NAME]` weren't replaced.
 
 **Solution**:
+
 - Search for `[` in constitution.md
 - Replace all placeholder tokens with actual values
 - Ensure no template comments remain in final document
@@ -580,6 +583,7 @@ pwd
 **Problem**: Implementation plan doesn't include constitution compliance check.
 
 **Solution**:
+
 - Add `## Constitution Check` section to plan.md
 - List relevant principles that apply
 - Document any violations in Complexity Tra
@@ -590,6 +594,7 @@ pwd
 **Problem**: Type errors in TypeScript code.
 
 **Solution**:
+
 ```bash
 # Run type checking locally
 npx tsc --noEmit
@@ -606,6 +611,7 @@ npx tsc --noEmit path/to/file.ts
 **Problem**: Code doesn't meet linting standards.
 
 **Solution**:
+
 ```bash
 # See detailed errors
 npx eslint . --ext .ts,.tsx
@@ -618,11 +624,12 @@ npx eslint path/to/file.ts
 ```
 
 ##Constitution Version**: 1.1.0  
-**Changes in v1.1.0**: Added TypeScript and UI development standardsing check failed"
+**Changes in v1.1.0\*\*: Added TypeScript and UI development standardsing check failed"
 
 **Problem**: Code isn't formatted according to Prettier rules.
 
 **Solution**:
+
 ```bash
 # Format all files
 npx prettier --write "**/*.{ts,tsx,json,md}"
@@ -636,6 +643,7 @@ npx prettier --check "**/*.{ts,tsx}"
 **Problem**: tsconfig.json doesn't have strict mode enabled.
 
 **Solution**:
+
 - Open `tsconfig.json`
 - Add or modify: `"strict": true` in compilerOptions
 - Run `tsc --noEmit` to see new errors
@@ -646,6 +654,7 @@ npx prettier --check "**/*.{ts,tsx}"
 **Problem**: Environment differences between local and CI.
 
 **Solution**:
+
 - Check the workflow logs in GitHub Actions
 - Look for path issues (Windows vs. Linux paths)
 - Verify file line endings (CRLF vs. LF)

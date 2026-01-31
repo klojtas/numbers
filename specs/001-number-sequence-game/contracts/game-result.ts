@@ -1,8 +1,8 @@
 /**
  * Game Result Contract
- * 
+ *
  * Defines the structure for end-game statistics and results.
- * 
+ *
  * @module contracts/game-result
  */
 
@@ -10,7 +10,7 @@ import type { GameMode } from './game-mode';
 
 /**
  * Result data displayed at the end of a game.
- * 
+ *
  * @example
  * ```typescript
  * // Time Limit mode result
@@ -20,7 +20,7 @@ import type { GameMode } from './game-mode';
  *   totalTime: 100,
  *   isVictory: false, // Did not find all numbers
  * };
- * 
+ *
  * // Completion mode result
  * const result: GameResult = {
  *   mode: 'completion',
@@ -73,7 +73,7 @@ export interface CreateGameResultParams {
  */
 export function createGameResult(params: CreateGameResultParams): GameResult {
   const { mode, selectedNumbersCount, elapsedSeconds } = params;
-  
+
   return {
     mode,
     numbersFound: selectedNumbersCount,
@@ -92,7 +92,7 @@ export function getResultMessage(result: GameResult): string {
     }
     return `Time's up! You found ${result.numbersFound} out of 100 numbers.`;
   }
-  
+
   // Completion mode
   return `Completed! Your time: ${result.totalTime} seconds`;
 }

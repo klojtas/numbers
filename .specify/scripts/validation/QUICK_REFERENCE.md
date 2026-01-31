@@ -19,6 +19,7 @@ npx eslint . --ext .ts,.tsx --fix && npx prettier --write "**/*.{ts,tsx}"
 ## One-Liner Commands
 
 ### PowerShell (Windows)
+
 ```powershell
 # Run all validation checks
 .\.specify\scripts\validation\simulate-ci.ps1
@@ -34,6 +35,7 @@ npx eslint . --ext .ts,.tsx --fix && npx prettier --write "**/*.{ts,tsx}"
 ```
 
 ### Bash (Linux/macOS)
+
 ```bash
 # Run all validation checks
 ./.specify/scripts/validation/simulate-ci.sh
@@ -51,6 +53,7 @@ npx eslint . --ext .ts,.tsx --fix && npx prettier --write "**/*.{ts,tsx}"
 ## Quick Checks
 
 ### View Constitution Version
+
 ```powershell
 # PowerShell
 Select-String -Path ".specify/memory/constitution.md" -Pattern "Version.*:"
@@ -60,6 +63,7 @@ grep -E "Version.*:" .specify/memory/constitution.md
 ```
 
 ### List Principles
+
 ```powershell
 # PowerShell
 Select-String -Path ".specify/memory/constitution.md" -Pattern "^### [IVX]+\."
@@ -69,6 +73,7 @@ grep -E "^### [IVX]+\." .specify/memory/constitution.md
 ```
 
 ### Check for Placeholders
+
 ```powershell
 # PowerShell
 Select-String -Path ".specify/memory/constitution.md" -Pattern '\[.*\]' | Where-Object { $_.Line -notmatch "^#" }
@@ -98,12 +103,12 @@ Check workflow: Repository → Actions → "Constitution Compliance Validation"
 
 ## Troubleshooting
 
-| Issue | Solution |
-|-------|----------|
-| "Constitution file not found" | Verify you're in repo root: `pwd` or `Get-Location` |
-| "Invalid version format" | Use semantic versioning: `1.0.0` not `v1.0` |
-| "Placeholder tokens found" | Replace all `[PLACEHOLDER]` with actual values |
-| Workflow fails but local passes | Check file line endings (CRLF vs LF) |
+| Issue                           | Solution                                            |
+| ------------------------------- | --------------------------------------------------- |
+| "Constitution file not found"   | Verify you're in repo root: `pwd` or `Get-Location` |
+| "Invalid version format"        | Use semantic versioning: `1.0.0` not `v1.0`         |
+| "Placeholder tokens found"      | Replace all `[PLACEHOLDER]` with actual values      |
+| Workflow fails but local passes | Check file line endings (CRLF vs LF)                |
 
 ## Files to Know
 

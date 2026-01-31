@@ -5,7 +5,7 @@
 **Status**: Draft  
 **Input**: User description: "Create a web based game that it will be possible to host locally, in the docker container and on the github pages. Game will have a board 10 on 10 after pressing start there will be random numbers from 0 to 99 and the aim of the user will be to select them in ascending order. there are two buttons start and reset. Reset resets the game. Start is possible after reset and the numbers are randomly placed on the board. There are two modes 1) user has a time limit of x seconds where x as default is 100 seconds and the user can change it, when the time is reached game is stopped and the user is presented with how many numbers he was able to find 2) second mode is based on the selection of all numbers from 0 to 99 and the end game is when the user selects all numbers. In the end time is presented. In all modes always time counter is present and the last selected number."
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Play Basic Number Selection Game (Priority: P1)
 
@@ -118,35 +118,40 @@ As a developer/host, I want to deploy the game locally, in Docker, and on GitHub
 - **What happens if the user sets time limit to 0 or negative?** - Input validation prevents this; minimum time limit is 10 seconds
 - **What happens if the user closes the game summary modal?** - The game remains in ended state; Reset button is available to start over
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
 **Game Board**
+
 - **FR-001**: System MUST display a 10x10 grid (100 cells total) when the game starts
 - **FR-002**: System MUST populate the grid with numbers 0-99, each number appearing exactly once
 - **FR-003**: System MUST randomly shuffle the position of numbers on each new game
 - **FR-004**: System MUST visually distinguish selected numbers from unselected numbers
 
 **Game Controls**
+
 - **FR-005**: System MUST provide a Start button that initiates a new game
 - **FR-006**: System MUST provide a Reset button that clears the current game state
 - **FR-007**: Start button MUST be disabled while a game is in progress
 - **FR-008**: Reset button MUST be disabled when no game has been started
 
 **Number Selection**
+
 - **FR-009**: System MUST only accept clicks on the next number in ascending sequence
 - **FR-010**: System MUST provide brief visual feedback (red flash/shake ~200ms) when an incorrect number is clicked
 - **FR-011**: System MUST mark correctly selected numbers as "found" with visual indication
 - **FR-012**: System MUST always display the last successfully selected number
 
 **Time Tracking**
+
 - **FR-013**: System MUST display a running timer showing elapsed seconds
 - **FR-014**: Timer MUST start when the Start button is clicked
 - **FR-015**: Timer MUST stop when the game ends (time limit reached or all numbers found)
 - **FR-016**: Timer MUST reset to 0 when Reset is clicked
 
 **Game Modes**
+
 - **FR-017**: System MUST support "Time Limit" mode where game ends after X seconds
 - **FR-018**: System MUST support "Completion" mode where game ends when all numbers (0-99) are found
 - **FR-019**: Time Limit mode MUST have a configurable duration with default of 100 seconds
@@ -154,12 +159,14 @@ As a developer/host, I want to deploy the game locally, in Docker, and on GitHub
 - **FR-021**: System MUST allow mode selection before starting a game
 
 **End Game**
+
 - **FR-022**: System MUST display end-game summary showing relevant statistics
 - **FR-023**: In Time Limit mode, summary MUST show count of numbers found
 - **FR-024**: In Completion mode, summary MUST show total time taken
 - **FR-025**: System MUST prevent further number selection after game ends
 
 **Deployment**
+
 - **FR-026**: Application MUST be hostable as static files (for GitHub Pages)
 - **FR-027**: Application MUST be containerizable with Docker
 - **FR-028**: Application MUST work without server-side processing (client-side only)
@@ -171,7 +178,7 @@ As a developer/host, I want to deploy the game locally, in Docker, and on GitHub
 - **Game Mode**: Either "Time Limit" (with configurable duration) or "Completion" (find all numbers)
 - **Game Result**: End-game statistics including numbers found count and time elapsed
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

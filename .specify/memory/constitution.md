@@ -5,7 +5,7 @@ Amendment Type: MINOR (new principles and standards added)
 
 Modified Principles:
   - Quality Gates (Principle III) - Expanded with TypeScript-specific checks
-  
+
 Added Principles:
   - VI. UI Development Standards (NEW)
   - VII. TypeScript Standards (NEW)
@@ -75,6 +75,7 @@ Rationale for Version 1.1.0 (MINOR):
 - Constitution compliance MUST be verified for new features
 
 **Specific quality requirements**:
+
 - Unit tests for all business logic
 - Integration tests for component interactions
 - Contract tests for all public APIs/interfaces
@@ -117,6 +118,7 @@ Rationale for Version 1.1.0 (MINOR):
 - UI code MUST be self-documenting with clear component names
 
 **Specific UI requirements**:
+
 - Follow Material Design guidelines for spacing, typography, and colors
 - Maintain consistent look and feel across all interfaces
 - Prioritize accessibility (WCAG 2.1 AA minimum)
@@ -136,6 +138,7 @@ Rationale for Version 1.1.0 (MINOR):
 - Type errors MUST be fixed - no `@ts-ignore` without justification
 
 **TypeScript quality requirements**:
+
 - All functions MUST have explicit return types
 - All function parameters MUST have type annotations
 - Generics MUST be used appropriately for reusable components

@@ -1,8 +1,8 @@
 /**
  * Game Mode Contract
- * 
+ *
  * Defines the available game modes and their configurations.
- * 
+ *
  * @module contracts/game-mode
  */
 

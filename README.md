@@ -47,6 +47,7 @@ The game will be available at `http://localhost:8080`
 This project is automatically deployed to GitHub Pages on push to the `main` branch.
 
 To manually deploy:
+
 1. Ensure the repository is configured for GitHub Pages
 2. Push to the `main` branch
 3. The GitHub Actions workflow will build and deploy automatically
@@ -81,15 +82,15 @@ src/
 
 ### Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run preview` | Preview production build |
-| `npm test` | Run tests in watch mode |
-| `npm run test:run` | Run tests once |
-| `npm run test:coverage` | Run tests with coverage |
-| `npm run lint` | Run ESLint |
+| Command                 | Description              |
+| ----------------------- | ------------------------ |
+| `npm run dev`           | Start development server |
+| `npm run build`         | Build for production     |
+| `npm run preview`       | Preview production build |
+| `npm test`              | Run tests in watch mode  |
+| `npm run test:run`      | Run tests once           |
+| `npm run test:coverage` | Run tests with coverage  |
+| `npm run lint`          | Run ESLint               |
 
 ## License
 

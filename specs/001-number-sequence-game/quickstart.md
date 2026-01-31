@@ -96,16 +96,16 @@ import '@testing-library/jest-dom';
 
 ## Development Commands
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server (localhost:5173) |
-| `npm run build` | Build for production |
-| `npm run preview` | Preview production build locally |
-| `npm run test` | Run tests in watch mode |
-| `npm run test:run` | Run tests once |
-| `npm run lint` | Run ESLint |
-| `npm run format` | Run Prettier |
-| `npm run typecheck` | Run TypeScript compiler check |
+| Command             | Description                               |
+| ------------------- | ----------------------------------------- |
+| `npm run dev`       | Start development server (localhost:5173) |
+| `npm run build`     | Build for production                      |
+| `npm run preview`   | Preview production build locally          |
+| `npm run test`      | Run tests in watch mode                   |
+| `npm run test:run`  | Run tests once                            |
+| `npm run lint`      | Run ESLint                                |
+| `npm run format`    | Run Prettier                              |
+| `npm run typecheck` | Run TypeScript compiler check             |
 
 Add to `package.json` scripts:
 
@@ -207,7 +207,7 @@ docker run -p 8080:80 numbers-game
 
 ```typescript
 export default defineConfig({
-  base: '/numbers/',  // Replace with your repo name
+  base: '/numbers/', // Replace with your repo name
   plugins: [react()],
 });
 ```

@@ -1,9 +1,9 @@
 /**
  * Game State Contract
- * 
+ *
  * Defines the core state structure for the Number Sequence Game.
  * This interface represents the single source of truth for game state.
- * 
+ *
  * @module contracts/game-state
  */
 
@@ -16,7 +16,7 @@ export type GamePhase = 'idle' | 'playing' | 'ended';
 
 /**
  * Complete game state managed by useGame hook.
- * 
+ *
  * @example
  * ```typescript
  * const initialState: GameState = {
