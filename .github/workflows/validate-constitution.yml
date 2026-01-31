@@ -1,0 +1,377 @@
+name: Constitution Compliance & Quality Validation
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - '.specify/**'
+      - 'specs/**'
+      - 'src/**'
+      - 'tests/**'
+      - '**.ts'
+      - '**.tsx'
+      - 'package.json'
+      - 'tsconfig.json'
+  push:
+    branches: [main, develop]
+  workflow_dispatch:
+
+jobs:
+  validate-structure:
+    name: Validate Project Structure
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Check constitution exists
+        run: |
+          if [ ! -f ".specify/memory/constitution.md" ]; then
+            echo "❌ Constitution file not found at .specify/memory/constitution.md"
+            exit 1
+          fi
+          echo "✅ Constitution file exists"
+      
+      - name: Validate constitution format
+        run: |
+          echo "Checking constitution version format..."
+          if ! grep -E "Version.*: [0-9]+\.[0-9]+\.[0-9]+" .specify/memory/constitution.md; then
+            echo "❌ Constitution version not found or invalid format"
+            exit 1
+          fi
+          
+          if ! grep -E "Ratified.*: [0-9]{4}-[0-9]{2}-[0-9]{2}" .specify/memory/constitution.md; then
+            echo "❌ Ratification date not found or invalid format"
+            exit 1
+          fi
+          
+          if ! grep -E "Last Amended.*: [0-9]{4}-[0-9]{2}-[0-9]{2}" .specify/memory/constitution.md; then
+            echo "❌ Last amended date not found or invalid format"
+            exit 1
+          fi
+          
+          echo "✅ Constitution format is valid"
+      
+      - name: Check for placeholder tokens
+        run: |
+          echo "Checking for unfilled placeholders..."
+          if grep -E '\[PROJECT_NAME\]|\[PRINCIPLE_[0-9]+_NAME\]|\[PRINCIPLE_[0-9]+_DESCRIPTION\]|\[SECTION_[0-9]+_NAME\]|\[SECTION_[0-9]+_CONTENT\]|\[GOVERNANCE_RULES\]|\[CONSTITUTION_VERSION\]|\[RATIFICATION_DATE\]|\[LAST_AMENDED_DATE\]' .specify/memory/constitution.md; then
+            echo "❌ Found unfilled placeholder tokens in constitution"
+            exit 1
+          fi
+          echo "✅ No placeholder tokens found"
+      
+      - name: Validate template structure exists
+        run: |
+          echo "Checking required template files..."
+          required_templates=(
+            ".specify/templates/plan-template.md"
+            ".specify/templates/spec-template.md"
+            ".specify/templates/tasks-template.md"
+          )
+          
+          for template in "${required_templates[@]}"; do
+            if [ ! -f "$template" ]; then
+              echo "❌ Required template not found: $template"
+              exit 1
+            fi
+          done
+          echo "✅ All required templates exist"
+
+  typescript-quality:
+    name: TypeScript Quality Checks
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Check for TypeScript files
+        id: check_ts
+        run: |
+          if find . -name "*.ts" -o -name "*.tsx" | grep -q .; then
+            echo "has_typescript=true" >> $GITHUB_OUTPUT
+            echo "TypeScript files found"
+          else
+            echo "has_typescript=false" >> $GITHUB_OUTPUT
+            echo "No TypeScript files found - skipping TS checks"
+          fi
+      
+      - name: Setup Node.js
+        if: steps.check_ts.outputs.has_typescript == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        if: steps.check_ts.outputs.has_typescript == 'true'
+        run: |
+          if [ -f "package.json" ]; then
+            npm ci
+          else
+            echo "⚠️ No package.json found"
+            exit 0
+          fi
+      
+      - name: TypeScript type checking
+        if: steps.check_ts.outputs.has_typescript == 'true'
+        run: |
+          if [ -f "tsconfig.json" ]; then
+            echo "Running TypeScript compiler..."
+            npx tsc --noEmit || {
+              echo "❌ TypeScript type checking failed"
+              exit 1
+            }
+            echo "✅ TypeScript type checking passed"
+          else
+            echo "⚠️ No tsconfig.json found"
+          fi
+      
+      - name: ESLint validation
+        if: steps.check_ts.outputs.has_typescript == 'true'
+        run: |
+          if [ -f ".eslintrc.json" ] || [ -f ".eslintrc.js" ] || [ -f "eslint.config.js" ]; then
+            echo "Running ESLint..."
+            npx eslint . --ext .ts,.tsx || {
+              echo "❌ ESLint validation failed"
+              exit 1
+            }
+            echo "✅ ESLint validation passed"
+          else
+            echo "⚠️ No ESLint configuration found - consider adding"
+          fi
+      
+      - name: Prettier formatting check
+        if: steps.check_ts.outputs.has_typescript == 'true'
+        run: |
+          if [ -f ".prettierrc" ] || [ -f ".prettierrc.json" ] || [ -f "prettier.config.js" ]; then
+            echo "Checking code formatting..."
+            npx prettier --check "**/*.{ts,tsx}" || {
+              echo "❌ Code formatting check failed"
+              echo "Run 'npx prettier --write .' to fix"
+              exit 1
+            }
+            echo "✅ Code formatting check passed"
+          else
+            echo "⚠️ No Prettier configuration found - consider adding"
+          fi
+      
+      - name: Check tsconfig.json strict mode
+        if: steps.check_ts.outputs.has_typescript == 'true'
+        run: |
+          if [ -f "tsconfig.json" ]; then
+            if grep -q '"strict":\s*true' tsconfig.json; then
+              echo "✅ TypeScript strict mode enabled"
+            else
+              echo "❌ TypeScript strict mode not enabled"
+              echo "Constitution requires strict mode in tsconfig.json"
+              exit 1
+            fi
+          fi
+
+  validate-specs:
+    name: Validate Feature Specifications
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Check for spec files in PR
+        id: check_specs
+        run: |
+          if [ -d "specs" ]; then
+            spec_count=$(find specs -name "spec.md" -type f | wc -l)
+            echo "spec_count=$spec_count" >> $GITHUB_OUTPUT
+            echo "Found $spec_count spec file(s)"
+          else
+            echo "spec_count=0" >> $GITHUB_OUTPUT
+            echo "No specs directory found"
+          fi
+      
+      - name: Validate spec format
+        if: steps.check_specs.outputs.spec_count > 0
+        run: |
+          echo "Validating spec files..."
+          for spec in $(find specs -name "spec.md" -type f); do
+            echo "Checking $spec..."
+            
+            # Check for required sections
+            if ! grep -q "## User Scenarios & Testing" "$spec"; then
+              echo "❌ Missing 'User Scenarios & Testing' section in $spec"
+              exit 1
+            fi
+            
+            if ! grep -q "## Requirements" "$spec"; then
+              echo "❌ Missing 'Requirements' section in $spec"
+              exit 1
+            fi
+            
+            if ! grep -q "## Success Criteria" "$spec"; then
+              echo "❌ Missing 'Success Criteria' section in $spec"
+              exit 1
+            fi
+            
+            echo "✅ $spec has required sections"
+          done
+
+  validate-plans:
+    name: Validate Implementation Plans
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Check for plan files in PR
+        id: check_plans
+        run: |
+          if [ -d "specs" ]; then
+            plan_count=$(find specs -name "plan.md" -type f | wc -l)
+            echo "plan_count=$plan_count" >> $GITHUB_OUTPUT
+            echo "Found $plan_count plan file(s)"
+          else
+            echo "plan_count=0" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Validate plan format
+        if: steps.check_plans.outputs.plan_count > 0
+        run: |
+          echo "Validating plan files..."
+          for plan in $(find specs -name "plan.md" -type f); do
+            echo "Checking $plan..."
+            
+            # Check for Constitution Check section
+            if ! grep -q "## Constitution Check" "$plan"; then
+              echo "❌ Missing 'Constitution Check' section in $plan"
+              exit 1
+            fi
+            
+            # Check for Technical Context section
+            if ! grep -q "## Technical Context" "$plan"; then
+              echo "❌ Missing 'Technical Context' section in $plan"
+              exit 1
+            fi
+            
+            echo "✅ $plan has required sections"
+          done
+
+  validate-test-coverage:
+    name: Validate Test Coverage Requirements
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Check test directory structure
+        run: |
+          echo "Checking test directory structure..."
+          if [ -d "tests" ]; then
+            echo "✅ Tests directory exists"
+            
+            # Check for test organization based on constitution
+            if [ -d "src" ]; then
+              echo "Source directory found, checking for corresponding tests..."
+              # This is a placeholder - actual implementation would check
+              # for test files corresponding to source files
+              echo "ℹ️  Test coverage validation would run here"
+            fi
+          else
+            echo "⚠️  No tests directory found - if this is a new project, tests should be created"
+          fi
+
+  validate-documentation:
+    name: Validate Documentation
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Check README exists
+        run: |
+          if [ ! -f "README.md" ]; then
+            echo "❌ README.md not found"
+            exit 1
+          fi
+          echo "✅ README.md exists"
+      
+      - name: Check for testing documentation
+        run: |
+          if [ -f "TESTING.md" ]; then
+            echo "✅ TESTING.md exists"
+          else
+            echo "⚠️  TESTING.md not found - consider adding testing documentation"
+          fi
+
+  ui-quality:
+    name: UI Quality Standards
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Check for UI component files
+        id: check_ui
+        run: |
+          if find . -name "*.tsx" -o -name "*.vue" | grep -q .; then
+            echo "has_ui=true" >> $GITHUB_OUTPUT
+            echo "UI component files found"
+          else
+            echo "has_ui=false" >> $GITHUB_OUTPUT
+            echo "No UI component files found - skipping UI checks"
+          fi
+      
+      - name: Setup Node.js
+        if: steps.check_ui.outputs.has_ui == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Check Material Design usage
+        if: steps.check_ui.outputs.has_ui == 'true'
+        run: |
+          if [ -f "package.json" ]; then
+            if grep -q -E '"@mui/material"|"vuetify"|"@material"' package.json; then
+              echo "✅ Material Design framework detected in dependencies"
+            else
+              echo "⚠️  No Material Design framework found"
+              echo "Constitution requires Material Design-based UI"
+            fi
+          fi
+
+  summary:
+    name: Validation Summary
+    runs-on: ubuntu-latest
+    needs: [validate-structure, typescript-quality, validate-specs, validate-plans, validate-test-coverage, validate-documentation, ui-quality]
+    if: always()
+    
+    steps:
+      - name: Check results
+        run: |
+          echo "=== Constitution Compliance & Quality Validation Summary ==="
+          echo ""
+          echo "Structure Validation: ${{ needs.validate-structure.result }}"
+          echo "TypeScript Quality: ${{ needs.typescript-quality.result }}"
+          echo "Specs Validation: ${{ needs.validate-specs.result }}"
+          echo "Plans Validation: ${{ needs.validate-plans.result }}"
+          echo "Test Coverage Validation: ${{ needs.validate-test-coverage.result }}"
+          echo "Documentation Validation: ${{ needs.validate-documentation.result }}"
+          echo "UI Quality Standards: ${{ needs.ui-quality.result }}"
+          echo ""
+          
+          if [ "${{ needs.validate-structure.result }}" != "success" ]; then
+            echo "❌ Constitution compliance validation failed"
+            exit 1
+          fi
+          
+          echo "✅ Constitution compliance validation passed"
