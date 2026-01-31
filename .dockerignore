@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+
+# Version control
+.git/
+.gitignore
+
+# Docker files (avoid including in context)
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# IDE/Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment and logs
+.env*
+*.log
+npm-debug.log*
+
+# Testing
+coverage/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Specs (not needed in production)
+specs/
+.specify/
